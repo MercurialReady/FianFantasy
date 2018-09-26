@@ -5,46 +5,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_dark_btn"
     android:focusable="true"
     >
 
     <ImageView
-        android:id="@+id/back_arrow"
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/icon_author"/>
 
     <TextView
-        android:id="@+id/sign_login"
+        android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="登录"
-        android:textSize="40dp"
+        android:text="注册"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back_arrow"/>
+        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.0"/>
 
     <EditText
-        android:id="@+id/username"
+        android:id="@+id/register_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:drawableLeft="@drawable/ic_account"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_email"
+        android:drawablePadding="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="请输入用户名"
+        android:padding="12dp"
+        android:hint="手机号"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sign_login"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4"
+        />
 
     <EditText
         android:id="@+id/password"
@@ -52,58 +61,44 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="40dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="请输入密码"
-        android:drawableLeft="@drawable/ic_password"
+        android:padding="12dp"
+        android:hint="输入密码"
+        android:drawableLeft="@drawable/ic_register_password"
+        android:drawablePadding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username"/>
+        app:layout_constraintTop_toBottomOf="@+id/register_account"/>
 
-    <TextView
-        android:id="@+id/register"
+    <EditText
+        android:id="@+id/confirm_password"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="128dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:padding="12dp"
+        android:hint="确认密码"
+        android:drawableLeft="@drawable/ic_register_password"
+        android:drawablePadding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password"/>
+
+    <Button
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:text="注册"
-        android:background="@color/blackish_green"
-        android:textSize="30dp"
+        android:background="@color/shallow_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/or"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="或"
-        android:textSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/register"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:gravity="center"
-        android:text="登录"
-        android:background="@color/blue"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/or"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-
 </android.support.constraint.ConstraintLayout>

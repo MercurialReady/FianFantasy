@@ -50,6 +50,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     DrawerLayout mDrawerLayout;
+    FrameLayout bottom_frame;
 
     private TextView loginView;
 
@@ -77,6 +78,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
         Log.d("Mercurial","mNavigationView = null is " + (mNavigationView == null));
         mNavigationView = findViewById(R.id.nav_view);
         mDrawerLayout = findViewById(R.id.main_drawer);
+        bottom_frame = findViewById(R.id.bottom_frame);
         mNavigationView.getMenu().findItem(R.id.login).setVisible(false);
 
         initNavigationView();
@@ -125,11 +127,12 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
     {
         Log.d("Mercurial","startLoginFragment");
         mDrawerLayout.closeDrawers();
+        bottom_frame.setVisibility(View.INVISIBLE);
         Bundle bundle = new Bundle();
         bundle.putBoolean("isCreatedFromViewPager",true);
         BaseMvpFragment loginFragment = BaseMvpFragment.<LoginFragment>getInstance(LoginFragment.class,bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.content_fragment,loginFragment);
+        transaction.add(R.id.content_fragment,loginFragment,LoginFragment.class.getSimpleName());
         transaction.hide(getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
         transaction.show(loginFragment);
         transaction.commitAllowingStateLoss();
@@ -245,6 +248,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
     @Override
     public int getToolBarId()
     {
+        //return 0;
         return R.layout.second_toolbar;
     }
 

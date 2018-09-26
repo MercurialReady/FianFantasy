@@ -7,7 +7,7 @@ import com.example.mercu.finalfantasy.base.BaseView;
  * Created by qicheng on 2018/9/26.
  */
 
-public interface CollectContract
+public interface LoginContract
 {
     interface View extends BaseView
     {

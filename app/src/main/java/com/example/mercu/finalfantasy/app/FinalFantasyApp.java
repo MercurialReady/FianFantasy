@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.support.v7.widget.Toolbar;
 
-import com.example.mercu.finalfantasy.R;
 import com.example.mercu.finalfantasy.base.BaseMvpActivity;
 import com.example.mercu.finalfantasy.base.BaseToolBarActivity;
 import com.example.mercu.finalfantasy.base.IToolBar;
@@ -68,11 +67,11 @@ public class FinalFantasyApp extends Application
             {
                 if(activity instanceof BaseMvpActivity)
                 {
-                    Toolbar toolbar = activity.findViewById(R.id.common_toolbar);
-                    FrameLayout frameLayout = toolbar.findViewById(R.id.toolbar_frame);
-                    frameLayout.addView(LayoutInflater.from(instance)
-                            .inflate(((BaseMvpActivity) activity).getToolBarId(),null));
-                    ((BaseMvpActivity) activity).setSupportActionBar(toolbar);
+                    //Toolbar toolbar = activity.findViewById(R.id.common_toolbar);
+                    //FrameLayout frameLayout = toolbar.findViewById(R.id.toolbar_frame);
+                    //frameLayout.addView(LayoutInflater.from(instance)
+                    //        .inflate(((BaseMvpActivity) activity).getToolBarId(),null));
+                    //((BaseMvpActivity) activity).setSupportActionBar(toolbar);
                 }
             }
 
