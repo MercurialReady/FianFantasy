@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--这是个drawable文件，ripple是水波纹效果，所以要放在values-21文件夹下-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+        android:color="@color/while_most_color">
+
+    //@android:id/mask这个Id是限制水波纹的范围，当有这个item时，水波纹效果不会超出
+    //当前控件的宽高
+    <item
+        android:id="@android:id/mask"
+        android:drawable="@android:color/white" />
+    //这个item就是控件真正的background了，
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/dp_40" />
+
+            <solid android:color="@color/grey_bg" />
+
+            <stroke
+                android:width="1px"
+                android:color="@color/while_most_color" />
+        </shape>
+    </item>
+</ripple>
