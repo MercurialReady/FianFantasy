@@ -57,7 +57,7 @@ public class RegisterPresenter extends RxPresenter<RegisterContract.View>
     }
 
     @Override
-    public void autoLogin(LoginData data)
+    public void autoLogin(final LoginData data)
     {
         addRxSubscribe(mDataManager.getLoginData(data.getUsername(),data.getPassword())
                 .compose(RxTransformer.<BaseResponse<LoginData>>scheduleHelper())
@@ -67,6 +67,9 @@ public class RegisterPresenter extends RxPresenter<RegisterContract.View>
                     @Override
                     public void onNext(LoginData value)
                     {
+                        mDataManager.setLoginAccount(data.getUsername());
+                        mDataManager.setLoginPassword(data.getPassword());
+                        mDataManager.setLoginStatus(true);
                         mView.loginSuccess(value);
                     }
                 }));

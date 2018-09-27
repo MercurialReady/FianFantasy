@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -146,6 +147,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
     @Override
     public void showLoginView(LoginData data)
     {
+        mDrawerLayout.openDrawer(Gravity.LEFT);
         loginView.setText(mPresenter.getLoginAccount());
         mNavigationView.getMenu().findItem(R.id.login).setVisible(true);
     }

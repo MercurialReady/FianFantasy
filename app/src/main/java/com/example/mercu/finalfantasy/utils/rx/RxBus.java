@@ -1,9 +1,11 @@
 package com.example.mercu.finalfantasy.utils.rx;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by qicheng on 2018/9/27.
@@ -13,7 +15,7 @@ public class RxBus
 {
     private static volatile RxBus sInstance;
 
-    private PublishSubject bus = (PublishSubject) PublishSubject.create().toSerialized();
+    private Subject bus = PublishSubject.create().toSerialized();
 
     private RxBus()
     {
@@ -35,41 +37,32 @@ public class RxBus
         return sInstance;
     }
 
-    public void post(int code,Class clz)
+    @SuppressWarnings("unchecked")
+    public void post(int code,Object object)
     {
-        bus.onNext(new RxWrapper(code, clz));
+        bus.onNext(new RxWrapper(code, object));
     }
 
-    public void toObservable()
+    @SuppressWarnings("unchecked")
+    public <T> Observable<T> toObservable(final int code, final Class<T> eventType)
     {
-
+        return bus.ofType(RxWrapper.class)
+            .filter(new Predicate<RxWrapper>()
+            {
+                @Override
+                public boolean test(RxWrapper o) throws Exception
+                {
+                    return (o.getCode() == code && eventType.isInstance(o.getObject()));
+                }
+            })
+            .map(new Function<RxWrapper,Object>()
+            {
+                @Override
+                public Object apply(RxWrapper o) throws Exception
+                {
+                    return o.getObject();
+                }
+            })
+            .cast(eventType);
     }
-
-//    public void post(int code,Object object)
-//    {
-//        mBus.onNext(new RxMessage(code,object));
-//    }
-//
-//    public <T> Flowable<T> toObservable(final int code, final Class<T> eventType)
-//    {
-//        return mBus.ofType(RxMessage.class)
-//                .filter(new Predicate<RxMessage>()
-//                {
-//                    @Override
-//                    public boolean test(RxMessage rxMessage) throws Exception
-//                    {
-//                        return (rxMessage.getCode() == code && eventType.isInstance(rxMessage
-//                                .getObject()));
-//                    }
-//                })
-//                .map(new Function<RxMessage, Object>()
-//                {
-//                    @Override
-//                    public Object apply(RxMessage rxMessage) throws Exception
-//                    {
-//                        return rxMessage.getObject();
-//                    }
-//                })
-//                .cast(eventType);
-//    }
 }

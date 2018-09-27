@@ -7,12 +7,12 @@ package com.example.mercu.finalfantasy.utils.rx;
 public class RxWrapper
 {
     private int code;
-    private Class clz;
+    private Object mObject;
 
-    public RxWrapper(int code, Class clz)
+    public RxWrapper(int code, Object clz)
     {
         this.code = code;
-        this.clz = clz;
+        this.mObject = clz;
     }
 
     public int getCode()
@@ -25,13 +25,13 @@ public class RxWrapper
         this.code = code;
     }
 
-    public Class getClz()
+    public Object getObject()
     {
-        return clz;
+        return mObject;
     }
 
-    public void setClz(Class clz)
+    public void setObject(Object object)
     {
-        this.clz = clz;
+        mObject = object;
     }
 }

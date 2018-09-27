@@ -8,11 +8,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.example.mercu.finalfantasy.R;
+import com.example.mercu.finalfantasy.app.Constants;
 import com.example.mercu.finalfantasy.base.BaseMvpFragment;
 import com.example.mercu.finalfantasy.base.LoadingPage;
 import com.example.mercu.finalfantasy.contract.main.RegisterContract;
 import com.example.mercu.finalfantasy.model.bean.LoginData;
 import com.example.mercu.finalfantasy.presenter.main.RegisterPresenter;
+import com.example.mercu.finalfantasy.utils.rx.RxBus;
 import com.example.mercu.finalfantasy.utils.view.Logger;
 
 import butterknife.BindView;
@@ -91,5 +93,7 @@ public class RegisterFragment extends BaseMvpFragment<RegisterPresenter>
         transaction.hide(this);
         transaction.show(getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
         transaction.commitAllowingStateLoss();
+
+        RxBus.getsInstance().post(Constants.REGISTER_SUCCESS,data);
     }
 }
