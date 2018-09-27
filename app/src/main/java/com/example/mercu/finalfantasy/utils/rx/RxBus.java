@@ -16,7 +16,9 @@ public class RxBus
     private PublishSubject bus = (PublishSubject) PublishSubject.create().toSerialized();
 
     private RxBus()
-    {}
+    {
+
+    }
 
     public static RxBus getsInstance()
     {
