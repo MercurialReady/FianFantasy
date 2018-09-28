@@ -16,7 +16,7 @@ public class CookieManager implements CookieJar
 {
     private Context mContext;
 
-    PersistentCookieStore mPersistentCookieStore;
+    private static PersistentCookieStore mPersistentCookieStore;
 
     public CookieManager(Context context)
     {
@@ -36,7 +36,7 @@ public class CookieManager implements CookieJar
         return mPersistentCookieStore.get(url);
     }
 
-    public void clearAllCookies()
+    public static void clearAllCookies()
     {
         mPersistentCookieStore.removeAll();
     }

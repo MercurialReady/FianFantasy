@@ -20,5 +20,7 @@ public class Constants
     public static final String PASSWORD = "password";
     public static final String STATUS = "status";
 
-    public static final int REGISTER_SUCCESS = 1992;
+    public static final int REGISTER_SUCCESS = 1990;
+    public static final int LOGIN_SUCCESS = 1991;
+    public static final int CANCEL_COLLECT = 1992;
 }

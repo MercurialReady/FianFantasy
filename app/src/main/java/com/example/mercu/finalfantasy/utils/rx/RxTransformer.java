@@ -3,8 +3,10 @@ package com.example.mercu.finalfantasy.utils.rx;
 import android.util.Log;
 
 import com.example.mercu.finalfantasy.model.bean.FeedArticleData;
+import com.example.mercu.finalfantasy.model.bean.FeedArticleListData;
 import com.example.mercu.finalfantasy.model.http.BaseGankResponse;
 import com.example.mercu.finalfantasy.model.http.BaseResponse;
+import com.example.mercu.finalfantasy.utils.view.Logger;
 
 import org.reactivestreams.Publisher;
 
@@ -123,7 +125,8 @@ public class RxTransformer
                         if(tBaseResponse.getErrorCode() == BaseResponse.SUCCESS)
                         {
                             //这里仅仅这种数据需要这样，直接强制类型转换
-                            return createData((T)new FeedArticleData());
+                            Logger.d("handleCollectResult");
+                            return createData((T)new FeedArticleListData());
                         }
                         else
                         {
@@ -149,7 +152,9 @@ public class RxTransformer
                 }
                 catch (Throwable throwable)
                 {
-                    e .onError(throwable);
+                    Log.d("Mercurial",throwable.getMessage());
+                    Log.d("Mercurial",throwable.toString());
+                    e.onError(throwable);
                 }
 
             }

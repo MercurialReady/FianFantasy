@@ -1,37 +1,28 @@
-package com.example.mercu.finalfantasy.contract.wanandroid;
+package com.example.mercu.finalfantasy.contract.main;
 
 import com.example.mercu.finalfantasy.base.BasePresenter;
 import com.example.mercu.finalfantasy.base.BaseView;
-import com.example.mercu.finalfantasy.model.bean.BannerData;
 import com.example.mercu.finalfantasy.model.bean.FeedArticleData;
 import com.example.mercu.finalfantasy.model.bean.FeedArticleListData;
 
-import java.util.List;
-
 /**
- * Created by qicheng on 2018/8/29.
+ * Created by qicheng on 2018/9/28.
  */
 
-public interface MostUsefulContract
+public interface CollectContract
 {
     interface View extends BaseView
     {
-        void showBannerData(List<BannerData> mData);
-
-        void showUsefulArticle(FeedArticleListData mData);
+        void showCollectArticle(FeedArticleListData articleList);
 
         void collectArticleSuccess(int position,FeedArticleData article);
 
         void cancelCollectArticleSuccess(int position,FeedArticleData article);
-
-        void cancelFromCollect(int id);
     }
 
-    interface Presenter extends BasePresenter<View>
+    interface Presenter extends BasePresenter<CollectContract.View>
     {
-        void getBannerData();
-
-        void getUsefulArticle(int num);
+        void getCollectArticle(int num);
 
         void addCollectArticle(int position,FeedArticleData article);
 

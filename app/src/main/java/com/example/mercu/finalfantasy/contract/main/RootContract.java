@@ -23,6 +23,8 @@ public interface RootContract
 
         boolean getLoginStatus();
 
+        void setLoginStatus(Boolean status);
+
         void doLogin();
     }
 }

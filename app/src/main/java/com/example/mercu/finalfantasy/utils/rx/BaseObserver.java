@@ -34,6 +34,7 @@ public abstract class BaseObserver<T> extends ResourceObserver<T>
     {
         if(mBaseView == null)
         {
+            Log.d("Mercurial","mBaseView is null");
             return;
         }
         Log.d("Mercurial","e" + e.getMessage());

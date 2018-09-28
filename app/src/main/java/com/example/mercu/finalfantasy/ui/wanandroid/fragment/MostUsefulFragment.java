@@ -26,6 +26,7 @@ import com.example.mercu.finalfantasy.model.pres.PreferenceHelperImpl;
 import com.example.mercu.finalfantasy.presenter.wanandroid.MostUsefulPresenter;
 import com.example.mercu.finalfantasy.ui.wanandroid.adapter.MostUsefulAdapter;
 import com.example.mercu.finalfantasy.utils.view.GlideImageLoader;
+import com.example.mercu.finalfantasy.utils.view.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadmoreListener;
@@ -55,8 +56,6 @@ public class MostUsefulFragment extends BaseMvpFragment<MostUsefulPresenter>
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
 
-    String para1;
-    String para2;
     private Banner banner;
     private List<String> mBannerTitleList;
     private List<String> mBannerImageList;
@@ -166,6 +165,41 @@ public class MostUsefulFragment extends BaseMvpFragment<MostUsefulPresenter>
         mAdapter.setNewData(mData.getDatas());
     }
 
+    @Override
+    public void collectArticleSuccess(int position, FeedArticleData article)
+    {
+        mAdapter.setData(position,article);
+
+    }
+
+    @Override
+    public void cancelCollectArticleSuccess(int position, FeedArticleData article)
+    {
+        mAdapter.setData(position,article);
+    }
+
+    @Override
+    public void cancelFromCollect(int id)
+    {
+//        int position = 0;
+//        for(int i = 0;i < mAdapter.getData().size();i++)
+//        {
+//            if(((FeedArticleData) mAdapter.getData().get(i)).getId() == id)
+//            {
+//                position = i;
+//                Logger.d("cannot find match item");
+//                break;
+//            }
+//        }
+//        FeedArticleData data = (FeedArticleData) mAdapter.getData().get(position);
+//        data.setCollect(false);
+//        mAdapter.setData(position,data);
+//        Logger.d(((FeedArticleData) mAdapter.getData().get(1)).getId() + "id");
+//        Logger.d(((FeedArticleData) mAdapter.getData().get(1)).getAuthor() + "author");
+//        Logger.d("position = ",position);
+        mPresenter.getUsefulArticle(0);
+    }
+
     private void initBanner()
     {
         mBannerImageList = new ArrayList<>();
@@ -181,11 +215,11 @@ public class MostUsefulFragment extends BaseMvpFragment<MostUsefulPresenter>
             {
                 if(((FeedArticleData)mAdapter.getData().get(position)).isCollect())
                 {
-                    //todo:取消收藏
+                    mPresenter.cancelCollectArticle(position,(FeedArticleData) mAdapter.getData().get(position));
                 }
                 else
                 {
-                    //todo:增加收藏
+                    mPresenter.addCollectArticle(position,(FeedArticleData) mAdapter.getData().get(position));
                 }
             }
             break;

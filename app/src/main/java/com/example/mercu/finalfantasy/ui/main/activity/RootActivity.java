@@ -24,11 +24,14 @@ import com.example.mercu.finalfantasy.base.BaseMvpFragment;
 import com.example.mercu.finalfantasy.base.LoadingPage;
 import com.example.mercu.finalfantasy.contract.main.RootContract;
 import com.example.mercu.finalfantasy.model.bean.LoginData;
+import com.example.mercu.finalfantasy.model.http.cookie.CookieManager;
 import com.example.mercu.finalfantasy.presenter.main.RootPresenter;
 import com.example.mercu.finalfantasy.ui.gank.fragment.GankFragment;
 import com.example.mercu.finalfantasy.ui.main.adapter.HomeFragmentAdapter;
+import com.example.mercu.finalfantasy.ui.main.fragment.CollectFragment;
 import com.example.mercu.finalfantasy.ui.main.fragment.HomeFragment;
 import com.example.mercu.finalfantasy.ui.main.fragment.LoginFragment;
+import com.example.mercu.finalfantasy.ui.main.fragment.RegisterFragment;
 import com.example.mercu.finalfantasy.ui.wanandroid.fragment.MostUsefulFragment;
 import com.example.mercu.finalfantasy.ui.zhihu.fragment.ZhiFragment;
 import com.example.mercu.finalfantasy.utils.view.BottomNavigationViewHelper;
@@ -100,7 +103,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
                 @Override
                 public void onClick(View view)
                 {
-                    //开启登录界面
+                    startLoginFragment();
                 }
             });
         }
@@ -119,6 +122,45 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
                 {
                     startLoginFragment();
                 }
+                return true;
+            }
+        });
+
+        mNavigationView.getMenu().findItem(R.id.main_page).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem)
+            {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.hide(getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
+                fragmentTransaction.hide(getSupportFragmentManager().findFragmentByTag(ZhiFragment.class.getSimpleName()));
+                fragmentTransaction.hide(getSupportFragmentManager().findFragmentByTag(GankFragment.class.getSimpleName()));
+                if(getSupportFragmentManager().findFragmentByTag(LoginFragment.class.getSimpleName()) != null)
+                {
+                    fragmentTransaction.hide(getSupportFragmentManager().findFragmentByTag(LoginFragment.class.getSimpleName()));
+                }
+                if(getSupportFragmentManager().findFragmentByTag(RegisterFragment.class.getSimpleName()) != null)
+                {
+                    fragmentTransaction.hide(getSupportFragmentManager().findFragmentByTag(RegisterFragment.class.getSimpleName()));
+                }
+                if(getSupportFragmentManager().findFragmentByTag(CollectFragment.class.getSimpleName()) != null)
+                {
+                    fragmentTransaction.hide(getSupportFragmentManager().findFragmentByTag(CollectFragment.class.getSimpleName()));
+                }
+                fragmentTransaction.show(getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
+                fragmentTransaction.commitAllowingStateLoss();
+                bottom_frame.setVisibility(View.VISIBLE);
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
+
+        mNavigationView.getMenu().findItem(R.id.setting).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem)
+            {
+                Log.d("Mercurial","onMenuItemClick setting");
                 return true;
             }
         });
@@ -141,15 +183,36 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
 
     private void startCollectFragment()
     {
-
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isCreatedFromViewPager",true);
+        BaseMvpFragment collectFragment = BaseMvpFragment.<CollectFragment>getInstance(CollectFragment.class,bundle);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.content_fragment,collectFragment,CollectFragment.class.getSimpleName());
+        transaction.hide(getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
+        transaction.show(collectFragment);
+        transaction.commitAllowingStateLoss();
     }
 
     @Override
     public void showLoginView(LoginData data)
     {
-        mDrawerLayout.openDrawer(Gravity.LEFT);
+        //mDrawerLayout.openDrawer(Gravity.LEFT);
         loginView.setText(mPresenter.getLoginAccount());
         mNavigationView.getMenu().findItem(R.id.login).setVisible(true);
+        mNavigationView.getMenu().findItem(R.id.login).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
+        {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem)
+            {
+                loginView.setText("登录");
+                CookieManager.clearAllCookies();
+                mPresenter.setLoginStatus(false);
+                mNavigationView.getMenu().findItem(R.id.login).setVisible(false);
+                return true;
+            }
+        });
+        mNavigationView.setCheckedItem(R.id.main_page);
+        bottom_frame.setVisibility(View.VISIBLE);
     }
 
     private void doShowHideFragment(String tag)

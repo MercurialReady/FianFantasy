@@ -4,13 +4,17 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.mercu.finalfantasy.R;
+import com.example.mercu.finalfantasy.app.Constants;
 import com.example.mercu.finalfantasy.base.BaseMvpFragment;
 import com.example.mercu.finalfantasy.base.LoadingPage;
 import com.example.mercu.finalfantasy.contract.main.LoginContract;
+import com.example.mercu.finalfantasy.model.bean.LoginData;
 import com.example.mercu.finalfantasy.presenter.main.LoginPresenter;
+import com.example.mercu.finalfantasy.utils.rx.RxBus;
 
 import butterknife.BindView;
 
@@ -26,6 +30,12 @@ public class LoginFragment extends BaseMvpFragment<LoginPresenter>
 
     @BindView(R.id.login)
     TextView login;
+
+    @BindView(R.id.username)
+    EditText username;
+
+    @BindView(R.id.password)
+    EditText password;
 
     @Override
     public int getLayoutId()
@@ -58,7 +68,8 @@ public class LoginFragment extends BaseMvpFragment<LoginPresenter>
             @Override
             public void onClick(View v)
             {
-                //执行登录
+                mPresenter.login(username.getText().toString().trim(),
+                        password.getText().toString().trim());
             }
         });
     }
@@ -67,5 +78,16 @@ public class LoginFragment extends BaseMvpFragment<LoginPresenter>
     protected void loadData()
     {
         setState(LoadingPage.STATE_SUCCESS);
+    }
+
+    @Override
+    public void loginSuccess(LoginData data)
+    {
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.hide(this);
+        transaction.show(getActivity().getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
+        transaction.commitAllowingStateLoss();
+
+        RxBus.getsInstance().post(Constants.LOGIN_SUCCESS,data);
     }
 }

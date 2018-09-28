@@ -45,6 +45,17 @@ public class RootPresenter extends RxPresenter<RootContract.View>
                         mView.showLoginView(value);
                     }
                 }));
+
+        addRxSubscribe(RxBus.getsInstance().toObservable(Constants.LOGIN_SUCCESS,LoginData.class)
+                .compose(RxTransformer.<LoginData>scheduleHelper())
+                .subscribeWith(new BaseObserver<LoginData>(mView,true)
+                {
+                    @Override
+                    public void onNext(LoginData value)
+                    {
+                        mView.showLoginView(value);
+                    }
+                }));
     }
 
     @Override
@@ -63,6 +74,12 @@ public class RootPresenter extends RxPresenter<RootContract.View>
     public boolean getLoginStatus()
     {
         return mDataManager.getLoginStatus();
+    }
+
+    @Override
+    public void setLoginStatus(Boolean status)
+    {
+        mDataManager.setLoginStatus(status);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.example.mercu.finalfantasy.base.BaseFragment;
 import com.example.mercu.finalfantasy.di.component.BaseFragmentComponent;
 import com.example.mercu.finalfantasy.ui.gank.fragment.GankFragment;
 import com.example.mercu.finalfantasy.ui.gank.fragment.GirlDetailFragment;
+import com.example.mercu.finalfantasy.ui.main.fragment.CollectFragment;
 import com.example.mercu.finalfantasy.ui.main.fragment.HomeFragment;
 import com.example.mercu.finalfantasy.ui.main.fragment.LoginFragment;
 import com.example.mercu.finalfantasy.ui.main.fragment.RegisterFragment;
@@ -44,4 +45,7 @@ public abstract class AbstractAllFragmentModule
 
     @ContributesAndroidInjector(modules = RegisterFragmentModule.class)
     abstract RegisterFragment contributeRegisterFragmentInjector();
+
+    @ContributesAndroidInjector(modules = CollectFragmentModule.class)
+    abstract CollectFragment contributeCollectFragmentInjector();
 }
