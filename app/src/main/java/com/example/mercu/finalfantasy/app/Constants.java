@@ -23,4 +23,16 @@ public class Constants
     public static final int REGISTER_SUCCESS = 1990;
     public static final int LOGIN_SUCCESS = 1991;
     public static final int CANCEL_COLLECT = 1992;
+
+    public static final String ARTICLE_LINK = "article_link";
+
+    public static final String ARTICLE_TITLE = "article_title";
+
+    public static final String ARTICLE_ID = "article_id";
+
+    public static final String IS_COLLECT = "is_collect";
+
+    public static final String IS_COMMON_SITE = "is_common_site";
+
+    public static final String IS_COLLECT_PAGE = "is_collect_page";
 }

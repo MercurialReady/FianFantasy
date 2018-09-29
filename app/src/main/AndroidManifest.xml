@@ -40,6 +40,11 @@
             <!--</intent-filter>-->
         <!--</activity>-->
 
+        <activity android:name=".ui.wanandroid.activity.ArticleDetailActivity"
+                  android:label="@string/app_name">
+
+        </activity>
+
     </application>
 
 </manifest>

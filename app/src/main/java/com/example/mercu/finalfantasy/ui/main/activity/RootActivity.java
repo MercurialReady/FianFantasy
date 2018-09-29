@@ -191,6 +191,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
         transaction.hide(getSupportFragmentManager().findFragmentByTag(HomeFragment.class.getSimpleName()));
         transaction.show(collectFragment);
         transaction.commitAllowingStateLoss();
+        mDrawerLayout.closeDrawers();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.mercu.finalfantasy.ui.wanandroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -24,6 +25,7 @@ import com.example.mercu.finalfantasy.model.dao.DbHelperImpl;
 import com.example.mercu.finalfantasy.model.http.HttpHelperImpl;
 import com.example.mercu.finalfantasy.model.pres.PreferenceHelperImpl;
 import com.example.mercu.finalfantasy.presenter.wanandroid.MostUsefulPresenter;
+import com.example.mercu.finalfantasy.ui.wanandroid.activity.ArticleDetailActivity;
 import com.example.mercu.finalfantasy.ui.wanandroid.adapter.MostUsefulAdapter;
 import com.example.mercu.finalfantasy.utils.view.GlideImageLoader;
 import com.example.mercu.finalfantasy.utils.view.Logger;
@@ -108,6 +110,10 @@ public class MostUsefulFragment extends BaseMvpFragment<MostUsefulPresenter>
             {
                 //todo:到具体细节展览界面
                 Log.d("Mercurial","click article");
+                Intent intent = new Intent(getActivity(), ArticleDetailActivity.class);
+                intent.putExtra(Constants.ARTICLE_LINK,((FeedArticleData)mAdapter.getData().get(position)).getLink().trim());
+                Logger.d(((FeedArticleData)mAdapter.getData().get(position)).getLink());
+                startActivity(intent);
             }
         });
 
