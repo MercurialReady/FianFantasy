@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -22,6 +23,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mercu.finalfantasy.R;
 import com.example.mercu.finalfantasy.app.FinalFantasyApp;
 import com.example.mercu.finalfantasy.model.bean.GankBean;
+import com.example.mercu.finalfantasy.utils.view.Logger;
 
 import java.util.List;
 
@@ -74,7 +76,19 @@ public class GirlAdapter extends PagerAdapter
                 iv.setImageBitmap(resource);
             }
         });
+//        if(position == 2)
+//        {
+//            Logger.d("position = 2");
+//            view.setTranslationX(200);
+//            view.setTranslationY(200);
+//            //view.setScaleX(0.5f);
+//            //view.setScaleY(0.5f);
+//            //view.setAlpha(0.5f);
+//            view.setBackgroundColor(Color.BLACK);
+//            //view.setBackgroundColor(Color.argb(200,0,0,0));
+//        }
         container.addView(view);
+
         return view;
     }
 
@@ -90,4 +104,13 @@ public class GirlAdapter extends PagerAdapter
     {
         return POSITION_NONE;
     }
+
+    @Override
+    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object)
+    {
+        //super.setPrimaryItem(container, position, object);
+
+    }
+
+
 }

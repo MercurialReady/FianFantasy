@@ -1,5 +1,6 @@
 package com.example.mercu.finalfantasy.ui.gank.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -39,6 +40,7 @@ public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         Bundle bundle = getArguments();
         if(bundle != null)
         {
@@ -59,6 +61,7 @@ public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
         mPagerAdapter = new GirlAdapter(mData,getActivity());
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(currentPosition);
+        //mPager.setBackgroundColor(Color.argb(10,0,0,0));
         Log.d("Mercurial","load girl");
     }
 
@@ -77,7 +80,11 @@ public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
     @Override
     public void onPageSelected(int position)
     {
+        if(position == 2)
+        {
 
+            mPager.setBackgroundColor(Color.argb(100,0,0,0));
+        }
     }
 
     @Override
