@@ -82,9 +82,9 @@ public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
     {
         if(position == 2)
         {
-
             mPager.setBackgroundColor(Color.argb(100,0,0,0));
         }
+        getActivity().getWindow().getDecorView().setBackgroundColor(Color.argb(200,0,0,0));
     }
 
     @Override
