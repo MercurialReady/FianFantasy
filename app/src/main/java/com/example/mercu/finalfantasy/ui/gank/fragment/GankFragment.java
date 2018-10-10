@@ -47,9 +47,6 @@ public class GankFragment extends BaseMvpFragment<GankPresenter>
     @BindView(R.id.girl_list)
     ViewGroup girlListLayout;
 
-    @BindView(R.id.girl_detail_container)
-    FrameLayout mFrameLayout;
-
     private StaggeredGridLayoutManager mLayoutManager;
 
     private Bundle bundle;
@@ -93,14 +90,14 @@ public class GankFragment extends BaseMvpFragment<GankPresenter>
             public void onItemClick(BaseQuickAdapter adapter, View view, int position)
             {
                 Log.d("Mercurial","click girl");
-                mFrameLayout.setVisibility(View.VISIBLE);
-                //startDetailFragment(position,mData);
-                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("girls",mData);
-                bundle.putInt("currentPosition",position);
-                intent.putExtra("detail_girl",bundle);
-                getActivity().startActivity(intent);
+                //mFrameLayout.setVisibility(View.VISIBLE);
+                startDetailFragment(position,mData);
+//                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelableArrayList("girls",mData);
+//                bundle.putInt("currentPosition",position);
+//                intent.putExtra("detail_girl",bundle);
+//                getActivity().startActivity(intent);
             }
         });
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener()
@@ -110,15 +107,15 @@ public class GankFragment extends BaseMvpFragment<GankPresenter>
             {
                 Log.d("Mercurial","click girl");
                 //mFrameLayout.setVisibility(View.VISIBLE);
-                //startDetailFragment(position,mData);
-                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("girls",mData);
-                bundle.putInt("currentPosition",position);
-                intent.putExtra("detail_girl",bundle);
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),view,mData.get(position).getUrl());
-
-                getActivity().startActivity(intent,options.toBundle());
+                startDetailFragment(position,mData);
+//                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
+//                Bundle bundle = new Bundle();
+//                bundle.putParcelableArrayList("girls",mData);
+//                bundle.putInt("currentPosition",position);
+//                intent.putExtra("detail_girl",bundle);
+//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),view,mData.get(position).getUrl());
+//
+//                getActivity().startActivity(intent,options.toBundle());
                 return true;
             }
         });
@@ -147,15 +144,25 @@ public class GankFragment extends BaseMvpFragment<GankPresenter>
 
     private void startDetailFragment(int position,ArrayList<GankBean> mData)
     {
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//        Bundle bundle = new Bundle();
+//        bundle.putParcelableArrayList("girls",mData);
+//        bundle.putInt("currentPosition",position);
+//        bundle.putBoolean("isCreatedFromViewPager",true);
+//        BaseMvpFragment girlFragment = BaseMvpFragment.<GirlDetailFragment>getInstance(GirlDetailFragment.class,bundle);
+//        transaction.add(R.id.girl_detail_container,girlFragment);
+//        transaction.addToBackStack(girlFragment.getClass().getSimpleName());
+//        transaction.commitAllowingStateLoss();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("girls",mData);
         bundle.putInt("currentPosition",position);
         bundle.putBoolean("isCreatedFromViewPager",true);
         BaseMvpFragment girlFragment = BaseMvpFragment.<GirlDetailFragment>getInstance(GirlDetailFragment.class,bundle);
-        transaction.add(R.id.girl_detail_container,girlFragment);
+        transaction.add(R.id.content_fragment,girlFragment);
         transaction.addToBackStack(girlFragment.getClass().getSimpleName());
         transaction.commitAllowingStateLoss();
+
     }
 
 //    @Override

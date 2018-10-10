@@ -36,5 +36,7 @@ public interface MostUsefulContract
         void addCollectArticle(int position,FeedArticleData article);
 
         void cancelCollectArticle(int position,FeedArticleData article);
+
+        boolean getLoginStatus();
     }
 }

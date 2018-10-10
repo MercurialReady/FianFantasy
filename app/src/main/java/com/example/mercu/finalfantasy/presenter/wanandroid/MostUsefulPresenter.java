@@ -123,4 +123,10 @@ public class MostUsefulPresenter extends RxPresenter<MostUsefulContract.View> im
                     }
                 }));
     }
+
+    @Override
+    public boolean getLoginStatus()
+    {
+        return mDataManager.getLoginStatus();
+    }
 }

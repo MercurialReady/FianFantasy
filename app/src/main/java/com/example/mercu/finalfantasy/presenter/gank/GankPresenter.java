@@ -39,7 +39,7 @@ public class GankPresenter extends RxPresenter<GankContract.View>
     @Override
     public void fetchData(int num, int page)
     {
-        mDataManager.getGirlList(20,10)
+        mDataManager.getGirlList(100,5)
                     .compose(RxTransformer.<BaseGankResponse<List<GankBean>>>scheduleHelper())
                     .compose(RxTransformer.<List<GankBean>>handleGankReponse())
                     .subscribeWith(new BaseObserver<List<GankBean>>(mView,true)

@@ -219,13 +219,19 @@ public class MostUsefulFragment extends BaseMvpFragment<MostUsefulPresenter>
         {
             case R.id.collect:
             {
-                if(((FeedArticleData)mAdapter.getData().get(position)).isCollect())
+                if(mPresenter.getLoginStatus())
                 {
-                    mPresenter.cancelCollectArticle(position,(FeedArticleData) mAdapter.getData().get(position));
+                    if (((FeedArticleData) mAdapter.getData().get(position)).isCollect())
+                    {
+                        mPresenter.cancelCollectArticle(position, (FeedArticleData) mAdapter.getData().get(position));
+                    } else
+                    {
+                        mPresenter.addCollectArticle(position, (FeedArticleData) mAdapter.getData().get(position));
+                    }
                 }
                 else
                 {
-                    mPresenter.addCollectArticle(position,(FeedArticleData) mAdapter.getData().get(position));
+                    //todo:goto login activity
                 }
             }
             break;

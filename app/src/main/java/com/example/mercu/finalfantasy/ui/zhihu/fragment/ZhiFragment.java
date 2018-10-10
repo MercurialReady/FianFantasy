@@ -51,7 +51,6 @@ public class ZhiFragment extends BaseMvpFragment<ZhiPresenter>
     {
         setState(LoadingPage.STATE_SUCCESS);
         mPresenter.fetchData(4,4,4,4);
-        Log.d("Mercurial","load ZhiFragment data");
     }
 
     @Override

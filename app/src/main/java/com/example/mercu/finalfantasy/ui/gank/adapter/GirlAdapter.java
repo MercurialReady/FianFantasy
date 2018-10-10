@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mercu.finalfantasy.R;
 import com.example.mercu.finalfantasy.app.FinalFantasyApp;
 import com.example.mercu.finalfantasy.model.bean.GankBean;
+import com.example.mercu.finalfantasy.utils.view.CoolImageView;
 import com.example.mercu.finalfantasy.utils.view.Logger;
 
 import java.util.List;
@@ -58,8 +59,30 @@ public class GirlAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position)
     {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_girl,null);
-        final ImageView iv = view.findViewById(R.id.item_girl);
+//        View view = LayoutInflater.from(mContext).inflate(R.layout.item_girl,null);
+//        final ImageView iv = view.findViewById(R.id.item_girl);
+//        Glide.with(mContext).load(data.get(position).getUrl()).asBitmap().into(new SimpleTarget<Bitmap>(FinalFantasyApp.getScreen_width(),FinalFantasyApp.getScreen_height())
+//        {
+//            @Override
+//            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
+//            {
+//                int width = resource.getWidth();
+//                int height = resource.getHeight();
+//                int realHeight = (FinalFantasyApp.getScreen_width()) * height / width;
+//                iv.getLayoutParams().width = FinalFantasyApp.getScreen_width();
+//                iv.getLayoutParams().height = FinalFantasyApp.getScreen_height();
+//                iv.setImageBitmap(resource);
+//            }
+//        });
+//        {
+//            Logger.d("position == 2");
+//            view.setScaleX(0.5f);
+//            view.setScaleY(0.5f);
+//        }
+//        container.addView(view);
+
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_girl_temp,null);
+        final CoolImageView iv = view.findViewById(R.id.cool_image);
         Glide.with(mContext).load(data.get(position).getUrl()).asBitmap().into(new SimpleTarget<Bitmap>(FinalFantasyApp.getScreen_width(),FinalFantasyApp.getScreen_height())
         {
             @Override
@@ -70,25 +93,10 @@ public class GirlAdapter extends PagerAdapter
                 int realHeight = (FinalFantasyApp.getScreen_width()) * height / width;
                 iv.getLayoutParams().width = FinalFantasyApp.getScreen_width();
                 iv.getLayoutParams().height = FinalFantasyApp.getScreen_height();
-                Matrix matrix = new Matrix();
-                matrix.preScale(0.5f,0.5f);
-                iv.setImageMatrix(matrix);
-                iv.setImageBitmap(resource);
+                iv.setBitmap(resource);
             }
         });
-//        if(position == 2)
-//        {
-//            Logger.d("position = 2");
-//            view.setTranslationX(200);
-//            view.setTranslationY(200);
-//            //view.setScaleX(0.5f);
-//            //view.setScaleY(0.5f);
-//            //view.setAlpha(0.5f);
-//            view.setBackgroundColor(Color.BLACK);
-//            //view.setBackgroundColor(Color.argb(200,0,0,0));
-//        }
         container.addView(view);
-
         return view;
     }
 
@@ -105,12 +113,7 @@ public class GirlAdapter extends PagerAdapter
         return POSITION_NONE;
     }
 
-    @Override
-    public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object)
-    {
-        //super.setPrimaryItem(container, position, object);
 
-    }
 
 
 }

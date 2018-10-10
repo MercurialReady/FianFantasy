@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
@@ -44,5 +45,11 @@ public class TestActivity extends AppCompatActivity
 //        //transaction.add(MostUsefulFragment.getInstance(MostUsefulFragment.class,null),MostUsefulFragment.class.getSimpleName());
 //        //transaction.addToBackStack(RootActivity.class.getName());
 //        transaction.commitNowAllowingStateLoss();
+    }
+
+    @Override
+    public void setEnterSharedElementCallback(SharedElementCallback callback)
+    {
+        super.setEnterSharedElementCallback(callback);
     }
 }

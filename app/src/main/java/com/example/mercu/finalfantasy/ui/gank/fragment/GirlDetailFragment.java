@@ -6,8 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.example.mercu.finalfantasy.R;
@@ -17,6 +20,7 @@ import com.example.mercu.finalfantasy.contract.gank.GirlContract;
 import com.example.mercu.finalfantasy.model.bean.GankBean;
 import com.example.mercu.finalfantasy.presenter.gank.GirlPresenter;
 import com.example.mercu.finalfantasy.ui.gank.adapter.GirlAdapter;
+import com.example.mercu.finalfantasy.utils.view.Logger;
 
 import java.util.List;
 
@@ -27,7 +31,7 @@ import butterknife.BindView;
  */
 
 public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
-        implements GirlContract.View,ViewPager.OnPageChangeListener
+        implements GirlContract.View
 {
     @BindView(R.id.girl_pager)
     ViewPager mPager;
@@ -47,6 +51,17 @@ public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
             mData = bundle.getParcelableArrayList("girls");
             currentPosition = bundle.getInt("currentPosition");
         }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getActivity(),R.style.translucent);
+        LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
+        View view = super.onCreateView(localInflater, container, savedInstanceState);
+        view.setBackgroundColor(Color.argb(200,0,0,0));
+        return view;
     }
 
     @Override
@@ -71,25 +86,5 @@ public class GirlDetailFragment extends BaseMvpFragment<GirlPresenter>
         setState(LoadingPage.STATE_SUCCESS);
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
-    {
 
-    }
-
-    @Override
-    public void onPageSelected(int position)
-    {
-        if(position == 2)
-        {
-            mPager.setBackgroundColor(Color.argb(100,0,0,0));
-        }
-        getActivity().getWindow().getDecorView().setBackgroundColor(Color.argb(200,0,0,0));
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state)
-    {
-
-    }
 }
