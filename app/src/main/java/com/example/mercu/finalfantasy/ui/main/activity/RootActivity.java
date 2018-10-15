@@ -1,10 +1,12 @@
 package com.example.mercu.finalfantasy.ui.main.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +17,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -26,6 +29,7 @@ import com.example.mercu.finalfantasy.contract.main.RootContract;
 import com.example.mercu.finalfantasy.model.bean.LoginData;
 import com.example.mercu.finalfantasy.model.http.cookie.CookieManager;
 import com.example.mercu.finalfantasy.presenter.main.RootPresenter;
+import com.example.mercu.finalfantasy.ui.gank.activity.GankActivity;
 import com.example.mercu.finalfantasy.ui.gank.fragment.GankFragment;
 import com.example.mercu.finalfantasy.ui.main.adapter.HomeFragmentAdapter;
 import com.example.mercu.finalfantasy.ui.main.fragment.CollectFragment;
@@ -34,9 +38,10 @@ import com.example.mercu.finalfantasy.ui.main.fragment.LoginFragment;
 import com.example.mercu.finalfantasy.ui.main.fragment.RegisterFragment;
 import com.example.mercu.finalfantasy.ui.wanandroid.fragment.MostUsefulFragment;
 import com.example.mercu.finalfantasy.ui.zhihu.fragment.ZhiFragment;
+import com.example.mercu.finalfantasy.utils.rx.RxBus;
 import com.example.mercu.finalfantasy.utils.view.BottomNavigationViewHelper;
+import com.example.mercu.finalfantasy.utils.view.Logger;
 
-import java.util.logging.Logger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -161,6 +166,7 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
             public boolean onMenuItemClick(MenuItem menuItem)
             {
                 Log.d("Mercurial","onMenuItemClick setting");
+                startActivity(new Intent(RootActivity.this, GankActivity.class));
                 return true;
             }
         });
@@ -322,5 +328,31 @@ public class RootActivity extends BaseMvpActivity<RootPresenter>
     public void onBackPressed()
     {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+        Bundle bundle = data.getExtras();
+        int currentPosition = bundle.getInt("currentPosition",0);
+        Logger.d("currentPosition" + currentPosition);
+
+        RxBus.getsInstance().post(11111,currentPosition);
+        //做相应的滚动
+        //recyclerView.scrollToPosition(currentPosition);
+        //暂时延迟 Transition 的使用，直到我们确定了共享元素的确切大小和位置才使用
+        //postponeEnterTransition后不要忘记调用startPostponedEnterTransition
+        ActivityCompat.postponeEnterTransition(this);
+//        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+//            @Override
+//            public boolean onPreDraw() {
+//                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+//                // TODO: figure out why it is necessary to request layout here in order to get a smooth transition.
+//                recyclerView.requestLayout();
+//                //共享元素准备好后调用startPostponedEnterTransition来恢复过渡效果
+                ActivityCompat.startPostponedEnterTransition(RootActivity.this);
+//                return true;
+//            }
+//        });
     }
 }

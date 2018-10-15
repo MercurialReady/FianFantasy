@@ -3,6 +3,7 @@ package com.example.mercu.finalfantasy.ui.gank.adapter;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -71,12 +72,12 @@ public class GankAdapter extends BaseQuickAdapter<GankBean,BaseViewHolder>
                                 item.setHeight(realHeight);
                                 helper.getView(R.id.gank_iv).getLayoutParams().height = item.getHeight();
                             }
-                            ((ImageView) helper.getView(R.id.gank_iv)).setImageBitmap(resource);
+                            ((AppCompatImageView) helper.getView(R.id.gank_iv)).setImageBitmap(resource);
 
                         }
                     });
             //helper.getView(R.id.gank_iv).setTag(R.id.gank_iv, item.getUrl());
-            ViewCompat.setTransitionName(helper.getView(R.id.gank_iv),String.valueOf(item.get_id()));
+            ViewCompat.setTransitionName(helper.getView(R.id.gank_iv),item.get_id());
             helper.addOnClickListener(R.id.gank_iv);
         //}
     }

@@ -138,4 +138,9 @@ public class FinalFantasyApp extends Application
     {
         return screen_height;
     }
+
+    public AppComponent getAppComponent()
+    {
+        return mAppComponent;
+    }
 }

@@ -49,6 +49,13 @@
 
         </activity>
 
+        <activity
+            android:name="com.example.mercu.finalfantasy.ui.gank.activity.GankActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.FullScreen"
+            >
+        </activity>
+
     </application>
 
 </manifest>

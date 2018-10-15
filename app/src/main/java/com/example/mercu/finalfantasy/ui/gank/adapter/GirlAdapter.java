@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,11 +37,14 @@ public class GirlAdapter extends PagerAdapter
 {
     private List<GankBean> data;
     private Context mContext;
+    View sharedElementView;
+    private SparseArray<View> mSharedViews;
 
     public GirlAdapter(List<GankBean> data,Context context)
     {
         this.data = data;
         mContext = context;
+        mSharedViews = new SparseArray<>();
     }
 
     @Override
@@ -59,30 +63,8 @@ public class GirlAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position)
     {
-//        View view = LayoutInflater.from(mContext).inflate(R.layout.item_girl,null);
-//        final ImageView iv = view.findViewById(R.id.item_girl);
-//        Glide.with(mContext).load(data.get(position).getUrl()).asBitmap().into(new SimpleTarget<Bitmap>(FinalFantasyApp.getScreen_width(),FinalFantasyApp.getScreen_height())
-//        {
-//            @Override
-//            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation)
-//            {
-//                int width = resource.getWidth();
-//                int height = resource.getHeight();
-//                int realHeight = (FinalFantasyApp.getScreen_width()) * height / width;
-//                iv.getLayoutParams().width = FinalFantasyApp.getScreen_width();
-//                iv.getLayoutParams().height = FinalFantasyApp.getScreen_height();
-//                iv.setImageBitmap(resource);
-//            }
-//        });
-//        {
-//            Logger.d("position == 2");
-//            view.setScaleX(0.5f);
-//            view.setScaleY(0.5f);
-//        }
-//        container.addView(view);
-
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_girl_temp,null);
-        final CoolImageView iv = view.findViewById(R.id.cool_image);
+        sharedElementView = LayoutInflater.from(mContext).inflate(R.layout.item_girl_temp,null);
+        final CoolImageView iv = sharedElementView.findViewById(R.id.cool_image);
         Glide.with(mContext).load(data.get(position).getUrl()).asBitmap().into(new SimpleTarget<Bitmap>(FinalFantasyApp.getScreen_width(),FinalFantasyApp.getScreen_height())
         {
             @Override
@@ -96,13 +78,15 @@ public class GirlAdapter extends PagerAdapter
                 iv.setBitmap(resource);
             }
         });
-        container.addView(view);
-        return view;
+        container.addView(sharedElementView);
+        mSharedViews.append(position,iv);
+        return sharedElementView;
     }
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object)
     {
+        Logger.d("viewpager destroy item");
         container.removeView((View)object);
     }
 
@@ -113,7 +97,9 @@ public class GirlAdapter extends PagerAdapter
         return POSITION_NONE;
     }
 
-
-
+    public View getSharedView(int position)
+    {
+        return mSharedViews.get(position);
+    }
 
 }

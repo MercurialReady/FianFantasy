@@ -3,6 +3,7 @@ package com.example.mercu.finalfantasy.ui.gank.fragment;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.transition.Slide;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.SharedElementCallback;
@@ -25,6 +26,8 @@ import com.example.mercu.finalfantasy.model.bean.GirlBean;
 import com.example.mercu.finalfantasy.presenter.gank.GankPresenter;
 import com.example.mercu.finalfantasy.ui.gank.activity.GirlDetailActivity;
 import com.example.mercu.finalfantasy.ui.zhihu.fragment.ZhiFragment;
+import com.example.mercu.finalfantasy.utils.rx.BaseObserver;
+import com.example.mercu.finalfantasy.utils.rx.RxBus;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -33,6 +36,12 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.ResourceObserver;
+
+import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
+import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN;
 
 /**
  * Created by qicheng on 2018/9/7.
@@ -84,38 +93,63 @@ public class GankFragment extends BaseMvpFragment<GankPresenter>
     @Override
     public void showImage(final ArrayList<GankBean> mData)
     {
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position)
-            {
-                Log.d("Mercurial","click girl");
-                //mFrameLayout.setVisibility(View.VISIBLE);
-                startDetailFragment(position,mData);
-//                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelableArrayList("girls",mData);
-//                bundle.putInt("currentPosition",position);
-//                intent.putExtra("detail_girl",bundle);
-//                getActivity().startActivity(intent);
-            }
-        });
         mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener()
         {
             @Override
-            public boolean onItemChildClick(BaseQuickAdapter adapter, View view, int position)
+            public boolean onItemChildClick(BaseQuickAdapter adapter, final View view, final int position)
             {
-                Log.d("Mercurial","click girl");
-                //mFrameLayout.setVisibility(View.VISIBLE);
-                startDetailFragment(position,mData);
-//                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelableArrayList("girls",mData);
-//                bundle.putInt("currentPosition",position);
-//                intent.putExtra("detail_girl",bundle);
-//                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),view,mData.get(position).getUrl());
-//
-//                getActivity().startActivity(intent,options.toBundle());
+                Log.d("Mercurial","click girl 2");
+
+                getActivity().setExitSharedElementCallback(new SharedElementCallback()
+                {
+                    @Override
+                    public void onMapSharedElements(final List<String> names, final Map<String, View> sharedElements)
+                    {
+                        //super.onMapSharedElements(names, sharedElements);
+                        //这个callback虽然是ExitSharedElementCallback,实际上exit和reenter都会回调，所以
+                        //依据bundle来判断是exit还是reenter
+                        Log.d("Mercurial","onMapSharedElements");
+                        RxBus.getsInstance().toObservable(11111,Integer.class)
+                                .subscribeWith(new Observer<Integer>()
+                                {
+                                    @Override
+                                    public void onSubscribe(Disposable d)
+                                    {
+
+                                    }
+
+                                    @Override
+                                    public void onNext(Integer value)
+                                    {
+                                        Log.d("Mercurial","Enter or Return");
+                                        names.clear();
+                                        sharedElements.clear();
+                                        sharedElements.put(mData.get(value).getUrl(),view);
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e)
+                                    {
+
+                                    }
+
+                                    @Override
+                                    public void onComplete()
+                                    {
+
+                                    }
+                                });
+                    }
+                });
+
+                Intent intent = new Intent(getActivity(), GirlDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("girls",mData);
+                bundle.putInt("currentPosition",position);
+                intent.putExtra("detail_girl",bundle);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(),view,mData.get(position).getUrl());
+
+                getActivity().startActivity(intent,options.toBundle());
                 return true;
             }
         });
@@ -123,68 +157,30 @@ public class GankFragment extends BaseMvpFragment<GankPresenter>
         mAdapter.setNewData(mData);
         Log.d("Mercurial","showImage");
 
-        setExitSharedElementCallback(new SharedElementCallback()
-        {
-            @Override
-            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements)
-            {
-                //super.onMapSharedElements(names, sharedElements);
-                //这个callback虽然是ExitSharedElementCallback,实际上exit和reenter都会回调，所以
-                //依据bundle来判断是exit还是reenter
-                if(bundle != null)
-                {
-//                    bundle.
-//                    names.clear();
-//                    sharedElements.clear();
-//                    names.add()
-                }
-            }
-        });
+        android.transition.Slide slide = new android.transition.Slide();
+        slide.setDuration(3000);
+        getActivity().getWindow().setSharedElementExitTransition(slide);
+
+        getActivity().getWindow().setSharedElementReenterTransition(slide);
+
+
+
+
     }
 
-    private void startDetailFragment(int position,ArrayList<GankBean> mData)
+    private void startDetailFragment(int position, ArrayList<GankBean> mData, View view)
     {
-//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-//        Bundle bundle = new Bundle();
-//        bundle.putParcelableArrayList("girls",mData);
-//        bundle.putInt("currentPosition",position);
-//        bundle.putBoolean("isCreatedFromViewPager",true);
-//        BaseMvpFragment girlFragment = BaseMvpFragment.<GirlDetailFragment>getInstance(GirlDetailFragment.class,bundle);
-//        transaction.add(R.id.girl_detail_container,girlFragment);
-//        transaction.addToBackStack(girlFragment.getClass().getSimpleName());
-//        transaction.commitAllowingStateLoss();
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("girls",mData);
         bundle.putInt("currentPosition",position);
         bundle.putBoolean("isCreatedFromViewPager",true);
         BaseMvpFragment girlFragment = BaseMvpFragment.<GirlDetailFragment>getInstance(GirlDetailFragment.class,bundle);
-        transaction.add(R.id.content_fragment,girlFragment);
-        transaction.addToBackStack(girlFragment.getClass().getSimpleName());
-        transaction.commitAllowingStateLoss();
+        transaction.setTransition(TRANSIT_FRAGMENT_OPEN);
+        transaction.addSharedElement(view,"image")
+                    .add(R.id.content_fragment,girlFragment)
+                    .addToBackStack(girlFragment.getClass().getSimpleName())
+                    .commitAllowingStateLoss();
 
     }
-
-//    @Override
-//    public void onActivityReenter(int resultCode, Intent data) {
-//        super.onActivityReenter(resultCode, data);
-//        bundle = data.getExtras();
-//        int currentPosition = bundle.getInt(ImagePagerActivity.STATE_POSITION,0);
-//        //做相应的滚动
-//        recyclerView.scrollToPosition(currentPosition);
-//        //暂时延迟 Transition 的使用，直到我们确定了共享元素的确切大小和位置才使用
-//        //postponeEnterTransition后不要忘记调用startPostponedEnterTransition
-//        ActivityCompat.postponeEnterTransition(this);
-//        recyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-//            @Override
-//            public boolean onPreDraw() {
-//                recyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-//                // TODO: figure out why it is necessary to request layout here in order to get a smooth transition.
-//                recyclerView.requestLayout();
-//                //共享元素准备好后调用startPostponedEnterTransition来恢复过渡效果
-//                ActivityCompat.startPostponedEnterTransition(MainActivity.this);
-//                return true;
-//            }
-//        });
-//    }
 }

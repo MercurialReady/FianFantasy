@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.mercu.finalfantasy.app.FinalFantasyApp;
+import com.example.mercu.finalfantasy.utils.rx.RxBus;
+import com.example.mercu.finalfantasy.utils.view.Logger;
 
 /**
  * Created by qicheng on 2018/9/17.
@@ -49,11 +52,16 @@ public class CoolImageView extends View
     private float fingerSecondX;
     private float fingerSecondY;
     private float totalAngle;
+    private float currentTop;
+    private float currentBottom;
+    private float currentLeft;
+    private float currentRight;
 
     private static final int INIT = 0;
     private static final int ZOOM_OUT = 1;
     private static final int ZOOM_IN = 2;
     private static final int MOVING = 3;
+    private static final int MODIFICATION = 4;
 
     public CoolImageView(Context context)
     {
@@ -124,7 +132,6 @@ public class CoolImageView extends View
                 if(totalRatio < initRatio)
                 {
                     //todo 这里就可以执行回到上一个界面的动画
-
                 }
             }
             break;
@@ -134,6 +141,7 @@ public class CoolImageView extends View
                 lastY = -1;
                 lastX = -1;
                 //backToInit();
+                checkBounds();
             }
             break;
 
@@ -165,14 +173,14 @@ public class CoolImageView extends View
                 }
                 else if(fingerPoint == 1)
                 {
-//                    if(totalRatio > initRatio)
-//                    {
-//                        status = MOVING;
-//                    }
-//                    else
-//                    {
-//                        status = INIT;
-//                    }
+                    if(totalRatio > initRatio)
+                    {
+                        status = MOVING;
+                    }
+                    else
+                    {
+                        status = INIT;
+                    }
 
                     if(lastX == -1 && lastY == -1)
                     {
@@ -194,6 +202,65 @@ public class CoolImageView extends View
         return true;
     }
 
+    private void checkBounds()
+    {
+        if(totalRatio < initRatio)
+        {
+            RxBus.getsInstance().post(12345,"back");
+            //postInvalidate();
+            return;
+        }
+
+        //图片的上边缘
+        currentBitmapWidth = mBitmap.getWidth() * totalRatio;
+        currentBitmapHeight = mBitmap.getHeight() * totalRatio;
+
+        currentTop = totalTranslateY;
+        currentBottom = currentBitmapHeight + totalTranslateY;
+
+        currentLeft = totalTranslateX;
+        currentRight = currentBitmapWidth + totalTranslateX;
+
+        if(currentBitmapHeight < FinalFantasyApp.getScreen_height())
+        {
+            status = MODIFICATION;
+            mMatrix.reset();
+            mMatrix.postScale(totalRatio,totalRatio);
+            mMatrix.preTranslate(-bitmapCenterX,-bitmapCenterY);
+            mMatrix.postTranslate((totalTranslateX + bitmapCenterX * totalRatio),screenCenterY);
+            totalTranslateY = screenCenterY - bitmapCenterY*totalRatio;
+            postInvalidate();
+        }
+        else
+        {
+            //再判断上下边缘是否超过屏幕的上下边缘
+            if(currentTop > getTop() && currentBottom > getBottom())
+            {
+                status = MODIFICATION;
+                mMatrix.reset();
+                mMatrix.postScale(totalRatio,totalRatio);
+                mMatrix.preTranslate(-bitmapCenterX,-bitmapCenterY);
+                mMatrix.postTranslate((totalTranslateX + bitmapCenterX * totalRatio),currentBitmapHeight/2);
+                totalTranslateY = currentBitmapHeight/2 - bitmapCenterY*totalRatio;
+                postInvalidate();
+            }
+            else if(currentBottom < getBottom() && currentTop < getTop())
+            {
+                status = MODIFICATION;
+                mMatrix.reset();
+                mMatrix.postScale(totalRatio,totalRatio);
+                mMatrix.preTranslate(-bitmapCenterX,-bitmapCenterY);
+                mMatrix.postTranslate((totalTranslateX + bitmapCenterX * totalRatio),FinalFantasyApp.getScreen_height() - currentBitmapHeight/2);
+                totalTranslateY = FinalFantasyApp.getScreen_height() - currentBitmapHeight;
+                postInvalidate();
+            }
+            else
+            {
+                //保持不动
+            }
+        }
+    }
+
     private void backToInit()
     {
         mMatrix.reset();
@@ -202,6 +269,7 @@ public class CoolImageView extends View
         mMatrix.postTranslate(0,(FinalFantasyApp.getScreen_height()-mBitmap.getHeight() * initRatio)/2);
         totalTranslateX = 0;
         totalTranslateY = (FinalFantasyApp.getScreen_height()-mBitmap.getHeight() * initRatio)/2;
+        totalAngle = 0;
     }
 
     private void getFingersDistance(MotionEvent event)
@@ -266,12 +334,57 @@ public class CoolImageView extends View
 
             case MOVING:
             {
-                totalTranslateX += (movedX * totalRatio);
-                totalTranslateY += (movedY * totalRatio);
+                totalTranslateX += movedX;
+
+                if(currentBitmapHeight < FinalFantasyApp.getScreen_height())
+                {
+                    //totalTranslateY = 0;
+                }
+                else
+                {
+                    totalTranslateY += movedY;
+                }
+
                 Log.e("Mercurial","Moving");
+
+                //图片的左边缘不允许超出屏幕的右边缘，图片的右边缘不允许超出屏幕的左边缘
+                //图片的上边缘
+                currentBitmapWidth = mBitmap.getWidth() * totalRatio;
+                currentBitmapHeight = mBitmap.getHeight() * totalRatio;
+
+                currentTop = totalTranslateY;
+                currentBottom = currentBitmapHeight + totalTranslateY;
+
+                currentLeft = totalTranslateX;
+                currentRight = currentBitmapWidth + totalTranslateX;
+
+                Logger.d("currentLeft = " + currentLeft);
+                Logger.d("currentRight = " + currentRight);
+                Logger.d("totalTranslateX = " + totalTranslateX);
+                Logger.d("currentBitmapWidth = " + currentBitmapWidth);
+
+
+                if(currentLeft > 0)
+                {
+                    totalTranslateX = 0;
+                }
+                else if(currentRight < FinalFantasyApp.getScreen_width())
+                {
+                     totalTranslateX = -currentBitmapWidth + FinalFantasyApp.getScreen_width();
+                }
+
+                if(currentTop > 0)
+                {
+                    totalTranslateY = 0;
+                }
+                else if(currentBottom < FinalFantasyApp.getScreen_height())
+                {
+                    totalTranslateY = -currentBitmapHeight + FinalFantasyApp.getScreen_height();
+                }
+
                 mMatrix.reset();
                 mMatrix.postScale(totalRatio,totalRatio);
-                mMatrix.postTranslate(movedX * totalRatio + totalTranslateX,movedY * totalRatio + totalTranslateY);
+                mMatrix.postTranslate(totalTranslateX,totalTranslateY);
 
             }
             break;
@@ -284,33 +397,37 @@ public class CoolImageView extends View
                 mMatrix.postRotate(totalAngle);
                 mMatrix.preTranslate(-bitmapCenterX,-bitmapCenterY);
                 mMatrix.postTranslate(screenCenterX,screenCenterY);
-                //totalTranslateX = (FinalFantasyApp.getScreenWidth() - totalRatio * mBitmap.getWidth())/2;
-                //totalTranslateY = (FinalFantasyApp.getScreenHeight() - totalRatio * mBitmap.getHeight())/2;
+                //totalTranslateX = (FinalFantasyApp.getScreen_width() - totalRatio * mBitmap.getWidth())/2;
+                //totalTranslateY = (FinalFantasyApp.getScreen_height() - totalRatio * mBitmap.getHeight())/2;
                 currentBitmapWidth = mBitmap.getWidth() * totalRatio;
                 currentBitmapHeight = mBitmap.getHeight() * totalRatio;
+                RxBus.getsInstance().post(123456,(int)(initRatio/totalRatio));
             }
             break;
             case ZOOM_OUT:
             {
+                //放大时逻辑：1.松开时，若图片没有占满一屏，图片居中显示 2.松开时，若图片占满一屏，看图片的上下边缘有没有
+                //都超出屏幕，若其中有一个没有，则修正，让它吸顶或者吸底
 
-                //放大状态,以两个手指的中心点为图片缩放的中心点
-                //此处用的是postScale(float sx, float sy, float px, float py)这个api
-                //这个api的好处是缩放后又平移了，平移的公式是：X2 = centerX - (centerX - X1)*scaledRatioX
-                //即(X2-X1)/(X1-centerX) = scaledRatioX;
-                //mMatrix.postScale(totalRatio,totalRatio,centerX,centerY);
-                //mMatrix.getValues();
-
-                //上下两段代码作用一致
-                mMatrix.reset();
-                mMatrix.postScale(totalRatio,totalRatio);
+                //这里初始的totalTranslateX已经有个初始偏移量
                 totalTranslateX = centerX * (1 - scaledRatio) + scaledRatio * totalTranslateX;
                 totalTranslateY = centerY * (1 - scaledRatio) + scaledRatio * totalTranslateY;
+
+                mMatrix.reset();
+                mMatrix.postScale(totalRatio,totalRatio);
                 mMatrix.postTranslate(totalTranslateX,totalTranslateY);
+
                 currentBitmapWidth = mBitmap.getWidth() * totalRatio;
                 currentBitmapHeight = mBitmap.getHeight() * totalRatio;
             }
             break;
+            case MODIFICATION:
+            {
+
+            }
+            break;
         }
+
         canvas.drawBitmap(mBitmap,mMatrix,null);
     }
 
@@ -319,25 +436,20 @@ public class CoolImageView extends View
         mBitmap = bitmap;
         totalRatio = initRatio = (FinalFantasyApp.getScreen_width() / (mBitmap.getWidth() * 1.0f));
         Logger.d("init ratio = ",initRatio);
-//        mMatrix.preTranslate(0,(FinalFantasyApp.getScreenHeight()-mBitmap.getHeight() * initRatio)/2);
+//        mMatrix.preTranslate(0,(FinalFantasyApp.getScreen_height()-mBitmap.getHeight() * initRatio)/2);
 //        mMatrix.preScale(initRatio,initRatio);
-//        mMatrix.postTranslate(FinalFantasyApp.getScreenWidth()/2,0);
+//        mMatrix.postTranslate(FinalFantasyApp.getScreen_width()/2,0);
 //        mMatrix.preRotate(90);
         mMatrix.postScale(initRatio,initRatio);
         mMatrix.postTranslate(0,(FinalFantasyApp.getScreen_height()-mBitmap.getHeight() * initRatio)/2);
         totalTranslateX = 0;
         totalTranslateY = (FinalFantasyApp.getScreen_height()-mBitmap.getHeight() * initRatio)/2;
-        //mMatrix.preTranslate(-(mBitmap.getWidth()/2 - FinalFantasyApp.getScreenWidth()/2),0);
+        //mMatrix.preTranslate(-(mBitmap.getWidth()/2 - FinalFantasyApp.getScreen_width()/2),0);
         CoolImageView.this.postInvalidate();
         bitmapCenterX = bitmap.getWidth()/2;
         bitmapCenterY = bitmap.getHeight()/2;
         screenCenterY = (getBottom() - getTop())/2;
         screenCenterX = (getRight() - getLeft())/2;
-        Logger.d("getBottom()",getBottom());
-        Logger.d("getTop()",getTop());
-        Logger.d("getRight()",getRight());
-        Logger.d("getLeft()",getLeft());
-        Logger.d("screenCenterX",screenCenterX);
-        Logger.d("screenCenterY",screenCenterY);
+
     }
 }

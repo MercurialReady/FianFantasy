@@ -41,6 +41,7 @@ public class RxBus
     public void post(int code,Object object)
     {
         bus.onNext(new RxWrapper(code, object));
+        //bus.onComplete();
     }
 
     @SuppressWarnings("unchecked")
